@@ -1,0 +1,3 @@
+[submodule "shared_components"]
+	path = shared_components
+	url = https://github.com/Ukuya-Sdn-Bhd/Flutter-Shared-Components.git
