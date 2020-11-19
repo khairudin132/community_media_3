@@ -9,12 +9,23 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  after_layout: ^1.0.7+2
   flutter:
     sdk: flutter
   md2_tab_indicator: ^1.0.2
+  http: ^0.12.2
   flutter_staggered_grid_view: ^0.3.2
   cupertino_icons: ^1.0.0
-
+  provider: ^4.3.2+2
+  simple_di:
+    git:
+      url: https://github.com/zulfahmi93/flutter-shared.git
+      path: di
+      ref: master
+  timeago: ^2.0.28
+  ukuya_community_api_client:
+    path: shared_components/api-clients/community/
+  youtube_player_flutter: ^7.0.0+7
 
 dev_dependencies:
   flutter_test:
@@ -23,7 +34,32 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - images/
+    - assets/images/
+    - assets/icons/
+  fonts:
+    - family: AvenirNext
+      fonts:
+        - asset: assets/fonts/AvenirNextLTPro-Regular.otf
+          style: normal
+          weight: 400
+        - asset: assets/fonts/AvenirNextLTPro-Bold.otf
+          style: normal
+          weight: 700
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Light.ttf
+          style: normal
+          weight: 300
+        - asset: assets/fonts/Lato-Regular.ttf
+          style: normal
+          weight: 400
+        - asset: assets/fonts/Lato-Bold.ttf
+          style: normal
+          weight: 700
+        - asset: assets/fonts/Lato-Black.ttf
+          style: normal
+          weight: 900
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

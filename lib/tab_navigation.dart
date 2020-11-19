@@ -3,12 +3,16 @@ import 'dart:ui';
 import 'package:community_media_3/pictures/pictures.dart';
 import 'package:community_media_3/videos/videos.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import 'all_media/all_media.dart';
+import 'app_state.dart';
 import 'files/files.dart';
 
 class NavigationItem {
   String title;
+
   NavigationItem(this.title);
 }
 
@@ -22,6 +26,9 @@ List<NavigationItem> getNavigationItemList() {
 }
 
 class TabNavigation extends StatefulWidget {
+  final AppState state;
+  TabNavigation({this.state});
+
   @override
   State createState() => _TabNavigationState();
 }
@@ -35,68 +42,84 @@ class _TabNavigationState extends State<TabNavigation> {
   // @override
   // void initState() {
   //   super.initState();
+  //   widget.state.fetchData();
   //   setState(() {
   //     selectedItem = navigationItems[0];
   //     currentWidgetView = AllMedia();
   //   });
   // }
 
-  // List<Widget> _children = [
-  //   AllMedia(),
-  //   Pictures(),
-  //   Videos(),
-  //   Files(),
-  // ];
-
-  // final List<Widget> items = [
-  //   Tab(
-  //     text: "All Media",
-  //   ),
-  //   Tab(
-  //     text: "Pictures",
-  //   ),
-  //   Tab(
-  //     text: "Videos",
-  //   ),
-  //   Tab(
-  //     text: "Files",
-  //   )
-  // ];
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _initChannel(widget.state);
+  // }
+  //
+  // _initChannel(AppState state) async {
+  //   await state.fetchData();
+  //   setState(() {
+  //     selectedItem = navigationItems[0];
+  //     currentWidgetView = AllMedia();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final _state = Provider.of<AppState>(context);
     return SafeArea(
       child: Scaffold(
           body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: 40),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: RichText(
+              text: TextSpan(
+                  text: 'COMMUNITY\n',
+                  style: TextStyle(
+                      fontSize: 36,
+                      fontFamily: 'Lato',
+                      fontWeight: FontWeight.w300,
+                      color: Color(0xFF646363)),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'MEDIA',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                  ]),
+            ),
+          ),
+          SizedBox(height: 60),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: buildNavigationItems(),
+            children: buildNavigationItems(_state),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 25),
           Expanded(
             child: AnimatedSwitcher(
               duration: Duration(milliseconds: 300),
               child: currentWidgetView,
             ),
           ),
+          SizedBox(height: 40),
         ],
       )),
     );
   }
 
-  List<Widget> buildNavigationItems() {
+  buildNavigationItems(AppState state) {
     List<Widget> list = [];
     for (var navigationItem in navigationItems) {
-      list.add(buildNavigationItem(navigationItem));
+      list.add(buildNavigationItem(navigationItem, state));
     }
     return list;
   }
 
-  Widget buildNavigationItem(NavigationItem item) {
+  Widget buildNavigationItem(NavigationItem item, AppState state) {
     return GestureDetector(
       onTap: () {
+        state.fetchData();
         setState(() {
           switch (item.title) {
             case "All Media":
@@ -112,51 +135,20 @@ class _TabNavigationState extends State<TabNavigation> {
               currentWidgetView = Files();
               break;
           }
-          selectedItem = item;
         });
+        selectedItem = item;
       },
       child: AnimatedOpacity(
         duration: Duration(milliseconds: 300),
         opacity: selectedItem == item ? 1.0 : 0.3,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              item.title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        child: Text(
+          item.title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
   }
-
-// @override
-// Widget build(BuildContext context) {
-//   return DefaultTabController(
-//     length: 4,
-//     child: Scaffold(
-//       body: TabBarView(
-//         children: _children,
-//       ),
-//       bottomNavigationBar: TabBar(
-//         labelStyle: TextStyle(fontWeight: FontWeight.w700),
-//         indicatorSize: TabBarIndicatorSize.label,
-//         labelColor: Color(0xff1967d2),
-//         unselectedLabelColor: Color(0xff5f6368),
-//         isScrollable: true,
-//         indicator: MD2Indicator(
-//           indicatorSize: MD2IndicatorSize.normal,
-//           indicatorHeight: 3,
-//           indicatorColor: Color(0xff1967d2),
-//         ),
-//         tabs: items,
-//       ),
-//     ),
-//   );
-// }
-
 }

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class Grid extends StatelessWidget {
-  final Widget child;
   final int generate;
-  Grid({this.child, this.generate});
+  final Widget child;
+  // final IndexWidget index;
+  final int index;
+
+  Grid({this.generate, this.child, this.index});
+
+  Function(int index) => child;
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +18,7 @@ class Grid extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         crossAxisCount: 3,
-        children: List.generate(generate, (index) {
-          return child;
-        }),
+        children: List.generate(generate, (index) => child),
       ),
     );
   }

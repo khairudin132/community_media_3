@@ -1,71 +1,33 @@
-import 'dart:math';
+import 'package:flutter/cupertino.dart';
 
-import 'file:///E:/Programming/ukuya/community_media_2/lib/component/grid_view.dart';
+import '../app_state.dart';
 import 'package:flutter/material.dart';
-
-import '../flower_model.dart';
+import 'package:provider/provider.dart';
 
 class AllMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Grid(child: _Carousel(), generate: 12);
-  }
-}
+    final appState = Provider.of<AppState>(context);
 
-class _Carousel extends StatelessWidget {
-  int _randomFlower() {
-    int number = Random().nextInt(decorationFlower.length);
-    return number;
-  }
-
-  // @required
-  // final String title;
-  //
-  // _Carousel({this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        GestureDetector(
-          onTap: () {},
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Image.asset(
-              decorationFlower[_randomFlower()].imageUrl,
-              fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-            ),
-          ),
-        ),
-        Container(
-          height: 35,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(6),
-                bottomRight: Radius.circular(6)),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment(0, -0.8),
-              colors: [
-                Colors.black.withOpacity(0.5),
-                Colors.black.withOpacity(0)
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 10,
-          left: 14,
-          child: Text('fsfsd',
-              style: TextStyle(
-                  fontSize: 8,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white)),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: appState.isFetching
+          ? Center(child: CircularProgressIndicator())
+          : appState.getResponseJson() != null
+              ? GridView.count(
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 3,
+                  children: List.generate(
+                    appState.getResponseJson().length,
+                    // appState.media.media.length,
+                    (index) => appState.buildTile(
+                      index, appState.getResponseJson()[index]['type'],
+                      // index, appState.media.media[index].mediaType,
+                    ),
+                  ),
+                )
+              : Container(),
     );
   }
 }
